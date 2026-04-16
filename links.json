@@ -180,6 +180,12 @@
           "enabled": true
         },
         {
+          "name": "Enma",
+          "url": "https://animesalt.ac/",
+          "logo": "./logo/anime/AnimeSalt.png",
+          "enabled": true
+        },
+        {
           "name": "Kaido",
           "url": "https://kaido.to/home",
           "logo": "./logo/anime/kaido.png",
