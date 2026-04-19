@@ -1,6 +1,6 @@
 {
-    "name": "PROJECT-HUB",
-    "short_name": "PROJECT-HUB",
+    "name": "TBCPL",
+    "short_name": "TBCPL",
     "description": "Free Media for all!",
     "start_url": "./",
     "display": "standalone",
