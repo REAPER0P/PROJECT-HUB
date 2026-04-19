@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Request A Site - Project Hub</title>
+    <meta name="color-scheme" content="dark">
+    <link rel="icon" href="https://tbcpl.lol/logo.png" type="image/png">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pace/1.2.4/pace.min.js"></script>
+    <link rel="stylesheet" href="./css/flash.css">
+    <link rel="stylesheet" href="./style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+        :root{
+            --bg:#04070f;--card:#0b1225;--card2:#0d1530;
+            --border:rgba(0,212,255,.15);--neon:#00d4ff;--neon2:#7b2ff7;--neon3:#ff2d78;
+            --green:#00ffaa;--red:#ff4466;--text:#bdd0e8;--text-dim:#3d5570;
+            --glow:0 0 22px rgba(0,212,255,.3);
+        }
+        html{scroll-behavior:smooth}
+        body{background:var(--bg);color:var(--text);font-family:'Rajdhani',sans-serif;min-height:100vh;overflow-x:hidden}
+
+        #particleCanvas{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.45}
+        .spotlight{position:fixed;width:480px;height:480px;border-radius:50%;background:radial-gradient(circle,rgba(0,212,255,.04) 0%,transparent 70%);transform:translate(-50%,-50%);pointer-events:none;z-index:1}
+        .mesh-bg{position:fixed;inset:0;z-index:0;pointer-events:none;
+            background:radial-gradient(ellipse 700px 500px at 10% 15%,rgba(123,47,247,.1) 0%,transparent 65%),radial-gradient(ellipse 600px 400px at 90% 80%,rgba(0,212,255,.08) 0%,transparent 65%);
+            animation:meshShift 12s ease-in-out infinite alternate}
+        @keyframes meshShift{0%{opacity:1}100%{opacity:.6}}
+
+        /* NAVBAR */
+        .navbar{position:fixed;top:0;left:0;right:0;z-index:200;height:64px;background:rgba(4,7,15,.7);backdrop-filter:blur(24px) saturate(180%);border-bottom:1px solid var(--border);animation:navSlide .7s cubic-bezier(.22,1,.36,1) both}
+        @keyframes navSlide{from{transform:translateY(-100%);opacity:0}to{transform:translateY(0);opacity:1}}
+        .nav-container{max-width:1100px;margin:0 auto;padding:0 24px;height:64px;display:flex;align-items:center;justify-content:space-between}
+        .nav-logo{text-decoration:none;display:flex;align-items:center;gap:10px;font-family:'Orbitron',sans-serif;font-weight:900;font-size:1.15rem;color:var(--neon);letter-spacing:2px;position:relative}
+        .nav-logo::after{content:'';position:absolute;bottom:-4px;left:0;right:0;height:1px;background:linear-gradient(90deg,var(--neon),transparent);transform:scaleX(0);transform-origin:left;transition:transform .35s}
+        .nav-logo:hover::after{transform:scaleX(1)}
+        .nav-logo-img{width:28px;height:28px;border-radius:7px}
+        .nav-menu{list-style:none;display:flex;gap:4px}
+        .nav-link{text-decoration:none;color:var(--text-dim);font-size:.88rem;font-weight:600;letter-spacing:1px;padding:8px 16px;border-radius:8px;border:1px solid transparent;transition:all .22s;display:flex;align-items:center;gap:7px;position:relative;overflow:hidden}
+        .nav-link::before{content:'';position:absolute;inset:0;background:rgba(0,212,255,.08);transform:translateX(-100%);transition:transform .25s}
+        .nav-link:hover::before,.nav-link.active::before{transform:translateX(0)}
+        .nav-link:hover,.nav-link.active{color:var(--neon);border-color:var(--border)}
+        .nav-toggle{display:none;background:none;border:1px solid var(--border);border-radius:8px;color:var(--neon);font-size:1.1rem;cursor:pointer;padding:8px 10px;transition:all .2s}
+        .nav-toggle:hover{background:rgba(0,212,255,.1)}
+
+        .container{position:relative;z-index:10;max-width:860px;margin:0 auto;padding:0 24px 80px}
+
+        /* HERO */
+        .hero-section{padding:130px 0 55px;text-align:center}
+        .hero-eyebrow{display:inline-flex;align-items:center;gap:10px;font-family:'Orbitron',sans-serif;font-size:.6rem;letter-spacing:5px;color:var(--neon2);border:1px solid rgba(123,47,247,.35);background:rgba(123,47,247,.08);padding:6px 20px;border-radius:100px;margin-bottom:26px;animation:fadeUp .8s .1s ease both}
+        .dot{width:6px;height:6px;border-radius:50%;background:var(--neon2);animation:blink 1.5s ease-in-out infinite}
+        @keyframes blink{0%,100%{opacity:1}50%{opacity:.15}}
+        .hero-title{font-family:'Orbitron',sans-serif;font-size:clamp(2rem,5.5vw,3.4rem);font-weight:900;color:#fff;animation:fadeUp .8s .2s ease both}
+        .hero-title span{color:transparent;-webkit-text-stroke:2px var(--neon);filter:drop-shadow(0 0 16px rgba(0,212,255,.6))}
+        .hero-divider{display:flex;align-items:center;justify-content:center;gap:14px;margin:20px auto;animation:fadeUp .8s .3s ease both}
+        .hdl{width:50px;height:1px;background:linear-gradient(90deg,transparent,var(--neon))}.hdl:last-child{transform:scaleX(-1)}
+        .hdd{width:7px;height:7px;background:var(--neon);transform:rotate(45deg);box-shadow:0 0 10px var(--neon)}
+        .subtitle{font-size:.95rem;color:var(--text-dim);letter-spacing:2px;animation:fadeUp .8s .35s ease both}
+        @keyframes fadeUp{from{opacity:0;transform:translateY(26px)}to{opacity:1;transform:translateY(0)}}
+
+        /* FORM CARD */
+        .form-card{background:var(--card);border:1px solid var(--border);border-radius:22px;padding:38px;margin:30px 0;position:relative;overflow:hidden;animation:fadeUp .8s .4s ease both}
+        .form-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--neon2),var(--neon),var(--neon3))}
+        /* entry shimmer */
+        .form-card::after{content:'';position:absolute;inset:0;background:linear-gradient(135deg,transparent 30%,rgba(0,212,255,.04) 50%,transparent 70%);pointer-events:none;animation:cardShimmer 3s ease-in-out infinite}
+        @keyframes cardShimmer{0%{transform:translateX(-100%)}100%{transform:translateX(200%)}}
+
+        .section-header{font-family:'Orbitron',sans-serif;font-size:.82rem;font-weight:700;letter-spacing:4px;color:var(--neon);text-transform:uppercase;margin-bottom:28px;display:flex;align-items:center;gap:12px}
+        .section-header::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,rgba(0,212,255,.3),transparent)}
+
+        /* FORM */
+        .form-group{margin-bottom:22px}
+        .form-label{display:block;font-size:.75rem;font-weight:700;letter-spacing:2.5px;color:var(--text-dim);text-transform:uppercase;margin-bottom:9px;transition:color .25s}
+        .form-group:focus-within .form-label{color:var(--neon)}
+        .form-label i{color:var(--neon);margin-right:7px}
+        .input-wrap{position:relative}
+        .form-input{width:100%;background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:11px;color:var(--text);font-family:'Rajdhani',sans-serif;font-size:1rem;letter-spacing:.5px;padding:13px 16px;outline:none;transition:border-color .25s,box-shadow .25s,background .25s}
+        .form-input:focus{border-color:var(--neon);background:rgba(0,212,255,.04);box-shadow:var(--glow),inset 0 0 0 1px rgba(0,212,255,.08)}
+        .form-input::placeholder{color:var(--text-dim)}
+        textarea.form-input{resize:vertical;min-height:108px}
+
+        /* character counter */
+        .char-count{position:absolute;right:12px;bottom:10px;font-size:.7rem;color:var(--text-dim);pointer-events:none;transition:color .25s}
+
+        /* SUBMIT */
+        .form-submit{width:100%;padding:15px;border-radius:12px;border:none;
+            background:linear-gradient(135deg,var(--neon2),var(--neon));
+            color:#fff;font-family:'Orbitron',sans-serif;font-size:.8rem;font-weight:700;letter-spacing:2px;
+            cursor:pointer;position:relative;overflow:hidden;margin-top:8px;
+            transition:transform .2s,box-shadow .2s,opacity .2s}
+        .form-submit::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,.15),transparent);opacity:0;transition:opacity .25s}
+        .form-submit:hover{transform:translateY(-3px);box-shadow:0 0 30px rgba(0,212,255,.35),0 0 60px rgba(123,47,247,.2)}
+        .form-submit:hover::before{opacity:1}
+        .form-submit:active{transform:translateY(0);opacity:.9}
+        .form-submit i{margin-right:8px}
+
+        /* SUCCESS */
+        .success-message{display:none;text-align:center;padding:50px 20px;animation:fadeUp .6s ease}
+        .success-icon{font-size:3.5rem;margin-bottom:18px;animation:bounceIn .6s cubic-bezier(.36,.07,.19,.97)}
+        @keyframes bounceIn{0%{transform:scale(0)}70%{transform:scale(1.2)}100%{transform:scale(1)}}
+        .success-message h3{font-family:'Orbitron',sans-serif;font-size:1.1rem;color:var(--green);letter-spacing:2px;margin-bottom:10px}
+        .success-message p{color:var(--text-dim);font-size:.95rem;line-height:1.6}
+
+        /* GUIDELINES */
+        .guidelines-card{background:var(--card);border:1px solid var(--border);border-radius:22px;padding:38px;margin-bottom:30px;position:relative;overflow:hidden;animation:fadeUp .8s .5s ease both}
+        .guidelines-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--neon3),var(--neon2))}
+        .guidelines-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+        @media(max-width:560px){.guidelines-grid{grid-template-columns:1fr}}
+        .guideline-card{background:rgba(255,255,255,.025);border:1px solid var(--border);border-radius:14px;padding:22px;transition:border-color .25s,box-shadow .25s}
+        .guideline-card:hover{border-color:rgba(0,212,255,.3);box-shadow:0 0 20px rgba(0,212,255,.08)}
+        .guideline-card h3{font-family:'Orbitron',sans-serif;font-size:.72rem;letter-spacing:2px;margin-bottom:16px;display:flex;align-items:center;gap:8px}
+        .guideline-card h3.positive{color:var(--green)}
+        .guideline-card h3.negative{color:var(--red)}
+        .guideline-list{list-style:none;display:flex;flex-direction:column;gap:10px}
+        .guideline-list li{display:flex;align-items:flex-start;gap:10px;font-size:.9rem;color:var(--text-dim);line-height:1.4;
+            opacity:0;transform:translateX(-12px);transition:opacity .4s,transform .4s}
+        .guideline-card.visible .guideline-list li{opacity:1;transform:translateX(0)}
+        .guideline-list li i{color:var(--neon);margin-top:3px;font-size:.72rem;flex-shrink:0}
+
+        /* FOOTER */
+        .footer{text-align:center;padding:45px 0 20px;border-top:1px solid var(--border);margin-top:10px}
+        .footer-links{display:flex;justify-content:center;gap:12px;margin-bottom:18px}
+        .footer-link{width:42px;height:42px;border-radius:10px;border:1px solid var(--border);background:var(--card);color:var(--text-dim);display:flex;align-items:center;justify-content:center;text-decoration:none;font-size:1.1rem;transition:all .25s}
+        .footer-link:hover{color:var(--neon);border-color:var(--neon);box-shadow:var(--glow);transform:translateY(-3px)}
+        .footer p{color:var(--text-dim);font-size:.85rem;letter-spacing:1px;margin:7px 0}
+        .footer .copyright{font-family:'Orbitron',sans-serif;font-size:.6rem;letter-spacing:4px;margin-top:10px}
+
+        /* MOBILE */
+        @media(max-width:640px){
+            .nav-toggle{display:block}
+            .nav-menu{display:none;flex-direction:column;position:absolute;top:64px;left:0;right:0;background:rgba(4,7,15,.97);border-bottom:1px solid var(--border);padding:12px;gap:4px}
+            .nav-menu.open{display:flex;animation:menuDrop .25s ease}
+            @keyframes menuDrop{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:translateY(0)}}
+            .form-card,.guidelines-card{padding:24px 18px}
+        }
+    </style>
+</head>
+<body>
+
+<div class="spotlight" id="spotlight"></div>
+<div class="mesh-bg"></div>
+<canvas id="particleCanvas"></canvas>
+
+<nav class="navbar" id="navbar">
+    <div class="nav-container">
+        <a href="index.html" class="nav-logo"><img src="logo.png" alt="Project Hub" class="nav-logo-img"> PROJECT HUB</a>
+        <button class="nav-toggle" id="navToggle"><i class="fas fa-bars"></i></button>
+        <ul class="nav-menu" id="navMenu">
+            <li><a href="index.html" class="nav-link"><i class="fas fa-home"></i> Home</a></li>
+            <li><a href="site-request.html" class="nav-link active"><i class="fas fa-plus-circle"></i> Request</a></li>
+        </ul>
+    </div>
+</nav>
+
+<div class="container">
+    <div class="hero-section">
+        <div class="hero-eyebrow"><span class="dot"></span> COMMUNITY <span class="dot"></span></div>
+        <h1 class="hero-title">Request A <span>Site</span></h1>
+        <div class="hero-divider"><div class="hdl"></div><div class="hdd"></div><div class="hdl"></div></div>
+        <div class="subtitle">Help Us Grow The Collection!</div>
+    </div>
+
+    <div class="form-card">
+        <h2 class="section-header">Submit Your Request</h2>
+        <form id="siteRequestForm">
+            <div class="form-group">
+                <label class="form-label"><i class="fas fa-link"></i> Site URL</label>
+                <div class="input-wrap">
+                    <input type="url" id="siteUrl" class="form-input" placeholder="https://example.com" required>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="form-label"><i class="fas fa-tag"></i> Site Name</label>
+                <div class="input-wrap">
+                    <input type="text" id="siteName" class="form-input" placeholder="Awesome Streaming Site" required>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="form-label"><i class="fas fa-star"></i> Why Should We Add It?</label>
+                <div class="input-wrap">
+                    <textarea id="siteFeature" class="form-input" maxlength="500" placeholder="Tell us what makes this site special... (e.g., large library, fast streaming, mobile-friendly)" required></textarea>
+                    <span class="char-count" id="charCount">0 / 500</span>
+                </div>
+            </div>
+            <button type="submit" class="form-submit"><i class="fas fa-paper-plane"></i> Submit Request</button>
+        </form>
+        <div id="successMessage" class="success-message">
+            <div class="success-icon">✅</div>
+            <h3>Request Sent!</h3>
+            <p>Thank you for your submission.<br>We'll review it and add quality sites to the list.</p>
+        </div>
+    </div>
+
+    <div class="guidelines-card" id="guidelinesCard">
+        <h2 class="section-header">Submission Guidelines</h2>
+        <div class="guidelines-grid">
+            <div class="guideline-card" id="gc1">
+                <h3 class="positive"><i class="fas fa-check-circle"></i> We Look For</h3>
+                <ul class="guideline-list">
+                    <li style="transition-delay:.05s"><i class="fas fa-caret-right"></i> Working, active sites</li>
+                    <li style="transition-delay:.10s"><i class="fas fa-caret-right"></i> Good content library</li>
+                    <li style="transition-delay:.15s"><i class="fas fa-caret-right"></i> User-friendly interface</li>
+                    <li style="transition-delay:.20s"><i class="fas fa-caret-right"></i> Mobile compatibility</li>
+                    <li style="transition-delay:.25s"><i class="fas fa-caret-right"></i> Minimal intrusive ads</li>
+                </ul>
+            </div>
+            <div class="guideline-card" id="gc2">
+                <h3 class="negative"><i class="fas fa-times-circle"></i> We Avoid</h3>
+                <ul class="guideline-list">
+                    <li style="transition-delay:.05s"><i class="fas fa-caret-right"></i> Broken or offline sites</li>
+                    <li style="transition-delay:.10s"><i class="fas fa-caret-right"></i> Excessive pop-ups / Malware</li>
+                    <li style="transition-delay:.15s"><i class="fas fa-caret-right"></i> Scam or phishing sites</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <div class="footer-links">
+        </div>
+        <p>Curated with 💜 by the Project Hub Team</p>
+        <p class="copyright">&copy; 2026 PROJECT HUB &nbsp;·&nbsp; ALL RIGHTS RESERVED</p>
+    </footer>
+</div>
+
+<script>
+/* PARTICLES */
+(function(){
+    const c=document.getElementById('particleCanvas'),ctx=c.getContext('2d');
+    let W,H,pts=[];
+    function resize(){W=c.width=window.innerWidth;H=c.height=window.innerHeight}
+    resize();window.addEventListener('resize',resize);
+    class P{
+        constructor(){this.x=Math.random()*W;this.y=Math.random()*H;this.s=Math.random()*1.3+.3;this.vx=(Math.random()-.5)*.28;this.vy=(Math.random()-.5)*.28;this.o=Math.random()*.5+.1;this.col=Math.random()>.5?'0,212,255':'123,47,247'}
+        update(){this.x+=this.vx;this.y+=this.vy;if(this.x<0)this.x=W;if(this.x>W)this.x=0;if(this.y<0)this.y=H;if(this.y>H)this.y=0}
+        draw(){ctx.beginPath();ctx.arc(this.x,this.y,this.s,0,Math.PI*2);ctx.fillStyle=`rgba(${this.col},${this.o})`;ctx.fill()}
+    }
+    for(let i=0;i<70;i++)pts.push(new P());
+    (function loop(){
+        ctx.clearRect(0,0,W,H);
+        for(let i=0;i<pts.length;i++){pts[i].update();pts[i].draw();
+            for(let j=i+1;j<pts.length;j++){const dx=pts[i].x-pts[j].x,dy=pts[i].y-pts[j].y,d=Math.sqrt(dx*dx+dy*dy);
+                if(d<110){ctx.beginPath();ctx.moveTo(pts[i].x,pts[i].y);ctx.lineTo(pts[j].x,pts[j].y);ctx.strokeStyle=`rgba(0,212,255,${.05*(1-d/110)})`;ctx.lineWidth=.5;ctx.stroke()}}}
+        requestAnimationFrame(loop);
+    })();
+})();
+
+/* SPOTLIGHT */
+const sp=document.getElementById('spotlight');
+document.addEventListener('mousemove',e=>{sp.style.left=e.clientX+'px';sp.style.top=e.clientY+'px'});
+
+/* CHAR COUNTER */
+const ta=document.getElementById('siteFeature'),cc=document.getElementById('charCount');
+ta.addEventListener('input',()=>{cc.textContent=ta.value.length+' / 500';cc.style.color=ta.value.length>450?'var(--neon3)':'var(--text-dim)'});
+
+/* GUIDELINE REVEAL */
+const gobs=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');gobs.unobserve(e.target)}}),{threshold:.15});
+document.querySelectorAll('.guideline-card').forEach(g=>gobs.observe(g));
+
+/* SUBMIT */
+document.getElementById('siteRequestForm').addEventListener('submit',async function(e){
+    e.preventDefault();
+    const btn=this.querySelector('.form-submit');
+    btn.innerHTML='<i class="fas fa-spinner fa-spin"></i> Sending...';btn.disabled=true;
+    const payload={siteUrl:document.getElementById('siteUrl').value,siteName:document.getElementById('siteName').value,siteFeature:document.getElementById('siteFeature').value};
+    try{
+        const res=await fetch('https://api.rgshows.ru/tbcpl/site_request',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
+        if(res.ok){this.style.display='none';document.getElementById('successMessage').style.display='block';}
+        else throw new Error();
+    }catch{btn.innerHTML='<i class="fas fa-paper-plane"></i> Submit Request';btn.disabled=false;alert('Error sending request. Please contact us on Discord.');}
+});
+
+/* NAV */
+document.getElementById('navToggle').addEventListener('click',()=>document.getElementById('navMenu').classList.toggle('open'));
+</script>
+</body>
+</html>
