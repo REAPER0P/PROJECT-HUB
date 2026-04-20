@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>404 - Page Not Found | Project Hub</title>
+    <link rel="icon" href="https://tbcpl.lol/logo.png" type="image/png">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pace/1.2.4/pace.min.js"></script>
+    <link rel="stylesheet" href="./css/flash.css">
+    <link rel="stylesheet" href="./style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+        :root{
+            --bg:#04070f;--card:#0b1225;--card2:#0d1530;
+            --border:rgba(0,212,255,.15);--neon:#00d4ff;--neon2:#7b2ff7;--neon3:#ff2d78;
+            --text:#bdd0e8;--text-dim:#3d5570;
+            --glow:0 0 22px rgba(0,212,255,.3);
+        }
+        html{scroll-behavior:smooth}
+        body{background:var(--bg);color:var(--text);font-family:'Rajdhani',sans-serif;min-height:100vh;overflow-x:hidden;display:flex;flex-direction:column}
+
+        /* BG LAYERS */
+        #particleCanvas{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.45}
+        .spotlight{position:fixed;width:480px;height:480px;border-radius:50%;background:radial-gradient(circle,rgba(255,45,120,.04) 0%,transparent 70%);transform:translate(-50%,-50%);pointer-events:none;z-index:1}
+        .mesh-bg{position:fixed;inset:0;z-index:0;pointer-events:none;
+            background:
+                radial-gradient(ellipse 700px 500px at 20% 30%,rgba(123,47,247,.1) 0%,transparent 65%),
+                radial-gradient(ellipse 600px 400px at 80% 70%,rgba(255,45,120,.07) 0%,transparent 65%),
+                radial-gradient(ellipse 400px 300px at 50% 50%,rgba(0,212,255,.06) 0%,transparent 65%);
+            animation:meshShift 10s ease-in-out infinite alternate}
+        @keyframes meshShift{0%{opacity:1}100%{opacity:.55}}
+
+        /* NAVBAR */
+        .navbar{position:fixed;top:0;left:0;right:0;z-index:200;height:64px;background:rgba(4,7,15,.7);backdrop-filter:blur(24px) saturate(180%);border-bottom:1px solid var(--border);animation:navSlide .7s cubic-bezier(.22,1,.36,1) both}
+        @keyframes navSlide{from{transform:translateY(-100%);opacity:0}to{transform:translateY(0);opacity:1}}
+        .nav-container{max-width:1300px;margin:0 auto;padding:0 24px;height:64px;display:flex;align-items:center;justify-content:space-between}
+        .nav-logo{text-decoration:none;display:flex;align-items:center;gap:10px;font-family:'Orbitron',sans-serif;font-weight:900;font-size:1.15rem;color:var(--neon);letter-spacing:2px;position:relative}
+        .nav-logo::after{content:'';position:absolute;bottom:-4px;left:0;right:0;height:1px;background:linear-gradient(90deg,var(--neon),transparent);transform:scaleX(0);transform-origin:left;transition:transform .35s}
+        .nav-logo:hover::after{transform:scaleX(1)}
+        .nav-logo-img{width:28px;height:28px;border-radius:7px}
+        .nav-menu{list-style:none;display:flex;gap:4px}
+        .nav-link{text-decoration:none;color:var(--text-dim);font-size:.88rem;font-weight:600;letter-spacing:1px;padding:8px 16px;border-radius:8px;border:1px solid transparent;transition:all .22s;display:flex;align-items:center;gap:7px;position:relative;overflow:hidden}
+        .nav-link::before{content:'';position:absolute;inset:0;background:rgba(0,212,255,.08);transform:translateX(-100%);transition:transform .25s}
+        .nav-link:hover::before{transform:translateX(0)}
+        .nav-link:hover{color:var(--neon);border-color:var(--border)}
+        .nav-toggle{display:none;background:none;border:1px solid var(--border);border-radius:8px;color:var(--neon);font-size:1.1rem;cursor:pointer;padding:8px 10px;transition:all .2s}
+
+        /* MAIN */
+        .page-wrap{flex:1;display:flex;align-items:center;justify-content:center;position:relative;z-index:10;padding:90px 24px 60px}
+
+        .error-section{text-align:center;max-width:720px;width:100%}
+
+        /* 404 NUMBER */
+        .error-number{display:flex;justify-content:center;align-items:center;gap:10px;margin-bottom:32px;line-height:1}
+        .error-digit{
+            font-family:'Orbitron',sans-serif;font-size:clamp(6rem,18vw,11rem);font-weight:900;
+            color:transparent;-webkit-text-stroke:2px var(--neon);
+            filter:drop-shadow(0 0 30px rgba(0,212,255,.5));
+            animation:digitFloat 3s ease-in-out infinite,fadeUp .8s ease both
+        }
+        .error-digit:nth-child(1){animation-delay:0s,.0s}
+        .error-digit:nth-child(3){animation-delay:.4s,.1s}
+        @keyframes digitFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
+
+        .error-skull{
+            font-size:clamp(5rem,14vw,8.5rem);
+            animation:skullSpin 6s ease-in-out infinite,fadeUp .8s .05s ease both;
+            filter:drop-shadow(0 0 20px rgba(255,45,120,.5));
+            display:inline-block;
+        }
+        @keyframes skullSpin{0%,100%{transform:translateY(0) rotate(0deg)}25%{transform:translateY(-12px) rotate(-6deg)}75%{transform:translateY(-8px) rotate(6deg)}}
+
+        /* GLITCH title */
+        .error-title{
+            font-family:'Orbitron',sans-serif;font-size:clamp(1.4rem,4vw,2.2rem);font-weight:900;
+            color:#fff;letter-spacing:4px;margin-bottom:16px;
+            animation:fadeUp .8s .2s ease both,glitch 7s infinite;
+            position:relative;display:inline-block
+        }
+        @keyframes glitch{
+            0%,88%,100%{clip-path:none;transform:none}
+            90%{clip-path:inset(30% 0 55% 0);transform:translateX(-4px);color:var(--neon3)}
+            92%{clip-path:inset(60% 0 15% 0);transform:translateX(4px);color:var(--neon2)}
+            94%{clip-path:none;transform:none}
+        }
+
+        .error-message{font-size:1rem;color:var(--text-dim);letter-spacing:1px;line-height:1.7;margin-bottom:36px;animation:fadeUp .8s .3s ease both}
+
+        /* RETURN BUTTON */
+        .error-btn{
+            display:inline-flex;align-items:center;gap:10px;
+            padding:14px 32px;border-radius:12px;
+            background:linear-gradient(135deg,var(--neon2),var(--neon));
+            color:#fff;text-decoration:none;
+            font-family:'Orbitron',sans-serif;font-size:.78rem;font-weight:700;letter-spacing:2px;
+            border:none;cursor:pointer;
+            transition:transform .2s,box-shadow .2s;
+            animation:fadeUp .8s .35s ease both;
+            position:relative;overflow:hidden;margin-bottom:52px
+        }
+        .error-btn::before{content:'';position:absolute;inset:0;background:rgba(255,255,255,.12);opacity:0;transition:opacity .25s}
+        .error-btn:hover{transform:translateY(-3px);box-shadow:0 0 30px rgba(0,212,255,.35),0 0 60px rgba(123,47,247,.2)}
+        .error-btn:hover::before{opacity:1}
+
+        /* SUGGESTION CARDS */
+        .suggestions-label{font-family:'Orbitron',sans-serif;font-size:.72rem;letter-spacing:4px;color:var(--text-dim);margin-bottom:18px;animation:fadeUp .8s .4s ease both}
+        .suggestions-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:44px;animation:fadeUp .8s .45s ease both}
+        @media(max-width:480px){.suggestions-grid{grid-template-columns:1fr}}
+
+        .suggestion-card{
+            background:var(--card);border:1px solid var(--border);border-radius:18px;padding:24px 20px;
+            text-decoration:none;transition:all .25s;position:relative;overflow:hidden;text-align:left
+        }
+        .suggestion-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--neon2),var(--neon));transform:scaleX(0);transform-origin:left;transition:transform .3s}
+        .suggestion-card:hover{border-color:rgba(0,212,255,.4);transform:translateY(-5px);box-shadow:0 8px 32px rgba(0,0,0,.4),0 0 16px rgba(0,212,255,.12)}
+        .suggestion-card:hover::before{transform:scaleX(1)}
+        .suggestion-icon{font-size:2rem;margin-bottom:12px;display:block}
+        .suggestion-card h3{font-family:'Orbitron',sans-serif;font-size:.78rem;letter-spacing:1px;color:var(--neon);margin-bottom:7px}
+        .suggestion-card p{color:var(--text-dim);font-size:.85rem;line-height:1.5}
+
+        /* FACT BOX */
+        .fun-fact{
+            background:var(--card);border:1px solid var(--border);border-radius:18px;padding:24px 28px;
+            position:relative;overflow:hidden;animation:fadeUp .8s .5s ease both;text-align:left
+        }
+        .fun-fact::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--neon3),var(--neon2))}
+        .fun-fact-label{font-family:'Orbitron',sans-serif;font-size:.65rem;letter-spacing:3px;color:var(--neon2);margin-bottom:10px;display:flex;align-items:center;gap:8px}
+        .fun-fact-label i{animation:blink 1.5s ease-in-out infinite}
+        @keyframes blink{0%,100%{opacity:1}50%{opacity:.2}}
+        .fun-fact p{color:var(--text-dim);font-size:.92rem;line-height:1.65;min-height:2.5em}
+
+        /* FOOTER */
+        .footer{position:relative;z-index:10;text-align:center;padding:30px 24px 24px;border-top:1px solid var(--border)}
+        .footer-links{display:flex;justify-content:center;gap:12px;margin-bottom:14px}
+        .footer-link{width:40px;height:40px;border-radius:10px;border:1px solid var(--border);background:var(--card);color:var(--text-dim);display:flex;align-items:center;justify-content:center;text-decoration:none;font-size:1rem;transition:all .25s}
+        .footer-link:hover{color:var(--neon);border-color:var(--neon);box-shadow:var(--glow);transform:translateY(-3px)}
+        .footer p{color:var(--text-dim);font-size:.8rem;letter-spacing:1px;margin:5px 0}
+        .footer .copyright{font-family:'Orbitron',sans-serif;font-size:.58rem;letter-spacing:3px;margin-top:8px}
+
+        /* MOBILE NAV */
+        @media(max-width:640px){
+            .nav-toggle{display:block}
+            .nav-menu{display:none;flex-direction:column;position:absolute;top:64px;left:0;right:0;background:rgba(4,7,15,.97);border-bottom:1px solid var(--border);padding:12px;gap:4px}
+            .nav-menu.open{display:flex;animation:menuDrop .25s ease}
+            @keyframes menuDrop{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:translateY(0)}}
+        }
+
+        @keyframes fadeUp{from{opacity:0;transform:translateY(26px)}to{opacity:1;transform:translateY(0)}}
+    </style>
+</head>
+<body>
+
+<div class="spotlight" id="spotlight"></div>
+<div class="mesh-bg"></div>
+<canvas id="particleCanvas"></canvas>
+
+<!-- NAVBAR -->
+<nav class="navbar" id="navbar">
+    <div class="nav-container">
+        <a href="index.html" class="nav-logo"><img src="logo.png" alt="Project Hub" class="nav-logo-img"> PROJECT HUB</a>
+        <button class="nav-toggle" id="navToggle"><i class="fas fa-bars"></i></button>
+        <ul class="nav-menu" id="navMenu">
+            <li><a href="index.html" class="nav-link"><i class="fas fa-home"></i> Home</a></li>
+            <li><a href="site-request.html" class="nav-link"><i class="fas fa-plus-circle"></i> Request</a></li>
+        </ul>
+    </div>
+</nav>
+
+<!-- MAIN -->
+<div class="page-wrap">
+    <div class="error-section">
+
+        <div class="error-number">
+            <span class="error-digit">4</span>
+            <span class="error-skull">💀</span>
+            <span class="error-digit">4</span>
+        </div>
+
+        <h1 class="error-title">YOU GOT LOST GANG</h1>
+        <p class="error-message">Looks like you wandered into a deleted or non-existent page.<br>Don't worry, we'll get you back.</p>
+
+        <a href="index.html" class="error-btn"><i class="fas fa-home"></i> Return Home</a>
+
+        <div class="suggestions-label">▸ MAYBE YOU'RE LOOKING FOR</div>
+        <div class="suggestions-grid">
+            <a href="index.html" class="suggestion-card">
+                <span class="suggestion-icon">🎬</span>
+                <h3>Browse Sites</h3>
+                <p>Explore our full streaming collection</p>
+            </a>
+            <a href="site-request.html" class="suggestion-card">
+                <span class="suggestion-icon">➕</span>
+                <h3>Request a Site</h3>
+                <p>Submit your favorite streaming site</p>
+            </a>
+        </div>
+
+        <div class="fun-fact">
+            <div class="fun-fact-label"><i class="fas fa-bolt"></i> RANDOM FACT</div>
+            <p id="randomFact">Loading...</p>
+        </div>
+
+    </div>
+</div>
+
+<!-- FOOTER -->
+<footer class="footer">
+    <div class="footer-links">
+        <a href="https://discord.gg/BPxzYVY5UU" target="_blank" class="footer-link"><i class="fab fa-discord"></i></a>
+        <a href="https://github.com/N3rdmade/TBCPL/" target="_blank" class="footer-link"><i class="fab fa-github"></i></a>
+    </div>
+    <p>Curated with 💜 by the Project Hub Team</p>
+    <p class="copyright">&copy; 2026 PROJECT HUB &nbsp;·&nbsp; ALL RIGHTS RESERVED</p>
+</footer>
+
+<script>
+/* PARTICLES */
+(function(){
+    const c=document.getElementById('particleCanvas'),ctx=c.getContext('2d');
+    let W,H,pts=[];
+    function resize(){W=c.width=window.innerWidth;H=c.height=window.innerHeight}
+    resize();window.addEventListener('resize',resize);
+    class P{
+        constructor(){this.x=Math.random()*W;this.y=Math.random()*H;this.s=Math.random()*1.3+.3;this.vx=(Math.random()-.5)*.28;this.vy=(Math.random()-.5)*.28;this.o=Math.random()*.5+.1;this.col=Math.random()>.6?'255,45,120':Math.random()>.5?'0,212,255':'123,47,247'}
+        update(){this.x+=this.vx;this.y+=this.vy;if(this.x<0)this.x=W;if(this.x>W)this.x=0;if(this.y<0)this.y=H;if(this.y>H)this.y=0}
+        draw(){ctx.beginPath();ctx.arc(this.x,this.y,this.s,0,Math.PI*2);ctx.fillStyle=`rgba(${this.col},${this.o})`;ctx.fill()}
+    }
+    for(let i=0;i<80;i++)pts.push(new P());
+    (function loop(){
+        ctx.clearRect(0,0,W,H);
+        for(let i=0;i<pts.length;i++){pts[i].update();pts[i].draw();
+            for(let j=i+1;j<pts.length;j++){const dx=pts[i].x-pts[j].x,dy=pts[i].y-pts[j].y,d=Math.sqrt(dx*dx+dy*dy);
+                if(d<100){ctx.beginPath();ctx.moveTo(pts[i].x,pts[i].y);ctx.lineTo(pts[j].x,pts[j].y);ctx.strokeStyle=`rgba(0,212,255,${.04*(1-d/100)})`;ctx.lineWidth=.5;ctx.stroke()}}}
+        requestAnimationFrame(loop);
+    })();
+})();
+
+/* SPOTLIGHT */
+const sp=document.getElementById('spotlight');
+document.addEventListener('mousemove',e=>{sp.style.left=e.clientX+'px';sp.style.top=e.clientY+'px'});
+
+/* RANDOM FACT */
+(async function(){
+    const el=document.getElementById('randomFact');
+    try{
+        const res=await fetch('https://uselessfacts.jsph.pl/api/v2/facts/random?language=en');
+        if(!res.ok)throw new Error();
+        const d=await res.json();
+        el.textContent=d.text;
+    }catch{el.textContent='The first website ever created is still online at info.cern.ch'}
+})();
+
+/* NAV */
+document.getElementById('navToggle').addEventListener('click',()=>document.getElementById('navMenu').classList.toggle('open'));
+window.addEventListener('scroll',()=>document.getElementById('navbar').classList.toggle('scrolled',window.scrollY>40));
+</script>
+</body>
+</html>
